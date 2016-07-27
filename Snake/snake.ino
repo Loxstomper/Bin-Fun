@@ -8,8 +8,8 @@ const uint8_t kMatrixWidth = 8;
 const uint8_t kMatrixHeight = 10;
 
 // Joystick
-const int joy_x_pin;
-const int joy_y_pin;
+const int joy_x_pin = A0;
+const int joy_y_pin = A1;
 int joy_x;
 int joy_y;
 
@@ -46,29 +46,29 @@ void movement()
     // (0,0) is bottom right
 
     // values are 0 - 1023 on each axis
-    joy_x_status = digitalRead(joy_x_pin);
-    joy_y_status = digitalRead(joy_y_pin);
+    joy_x = digitalRead(joy_x_pin);
+    joy_y = digitalRead(joy_y_pin);
 
     // TESTING SNAKE IS size 1, movement in blocked when hitting a wall in that direction
     // LED stuff
     leds[XY(x, y)] == CRGB::Black; // turn off previous LED
 
-    if(joy_x_status == 0 && snake_x < 7)
+    if(joy_x == 0 && snake_x < 7)
     {
         snake_x ++;
         Serial.println("Moved Left!");
     }
-    if(joy_x_status == 1023 && snake_x > 0)
+    if(joy_x== 1023 && snake_x > 0)
     {
         snake_x --;
         Serial.println("Moved Right!");
     }
-    if(joy_y_status == 0 && snake_y > 0)
+    if(joy_y == 0 && snake_y > 0)
     {
         snake_y --;
         Serial.println("Moved Down!");
     }
-    if(joy_y_status == 1023 && snake_y < 9)
+    if(joy_y== 1023 && snake_y < 9)
     {
         snake_y ++;
         Serial.println("Moved Up!");

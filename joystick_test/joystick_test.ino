@@ -16,10 +16,12 @@ void loop()
     int x = digitalRead(joy_x_pin);
     int y = digitalRead(joy_y_pin);
 
+    Serial.println("------------------------")
     Serial.print("X = ");
     Serial.println(x, DEC);
     Serial.print("Y = ");
     Serial.println(y, DEC);
+    Serial.println("------------------------")
 
     delay(500);
 }
