@@ -1,7 +1,7 @@
 #include "FastLED.h"
 
 #define LED_PIN  3
-#define CHIPSET     WS2812B
+#define CHIPSET  WS2812B
 
 // Matrix dimensions
 const uint8_t kMatrixWidth = 8;
@@ -49,23 +49,6 @@ void movement()
     joy_x_status = digitalRead(joy_x_pin);
     joy_y_status = digitalRead(joy_y_pin);
 
-    // if(joy_x_status == 0 && snake_x < 7)
-    // {
-    //     // MOVE LEFT
-    // }
-    // if(joy_x_status == 1023 && snake_x > 0)
-    // {
-    //     // MOVE RIGHT
-    // }
-    // if(joy_y_status == 0 && snake_y > 0)
-    // {
-    //     // MOVE DOWN
-    // }
-    // if(joy_y_status == 1023 && snake_y < 9)
-    // {
-    //     // MOVE UP
-    // }
-
     // TESTING SNAKE IS size 1, movement in blocked when hitting a wall in that direction
     // LED stuff
     leds[XY(x, y)] == CRGB::Black; // turn off previous LED
@@ -73,22 +56,26 @@ void movement()
     if(joy_x_status == 0 && snake_x < 7)
     {
         snake_x ++;
+        Serial.println("Moved Left!");
     }
     if(joy_x_status == 1023 && snake_x > 0)
     {
         snake_x --;
+        Serial.println("Moved Right!");
     }
     if(joy_y_status == 0 && snake_y > 0)
     {
         snake_y --;
+        Serial.println("Moved Down!");
     }
     if(joy_y_status == 1023 && snake_y < 9)
     {
         snake_y ++;
+        Serial.println("Moved Up!");
     }
 
-    leds[XY(x, y)] == CRGB::Red;
-
+    leds[XY(x, y)] == CRGB::Red; // new position
+    FastLED.show();
 }
 
 void setup()
@@ -96,9 +83,13 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   randomSeed(analogRead(0)); // sets up random seed using the input of an unconnected pin as the seed
   FastLED.addLeds<CHIPSET, LED_PIN, RGB>(leds, NUM_LEDS);
+
+  Serial.begin(9600);
+  Serial.println("Ready");
 }
 
 void loop()
 {
-
+    movement();
+    delay(100);
 }
