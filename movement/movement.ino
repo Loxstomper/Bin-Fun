@@ -71,7 +71,7 @@ void movement()
 {
     // 0,0 is bottom right hence why x is being increased to move left
 
-    leds[XY(snake_x, snake_y)] == CRGB::Black; // turn off current LED
+    leds[XY(snake_x, snake_y)] = CRGB::Black; // turn off current LED
     switch( direction)
     {
         case( 'u' ):
@@ -98,7 +98,7 @@ void movement()
             // else die animation or whatever
             break;
 
-        case( 'l' ):
+        case( 'r' ):
             if( snake_x > 0 )
             {
                 snake_x --;
@@ -107,7 +107,7 @@ void movement()
             break;
     }
 
-    leds[XY(snake_x, snake_y)] == CRGB::Red; // new position
+    leds[XY(snake_x, snake_y)] = CRGB::Red; // new position
     FastLED.show();
 }
 
