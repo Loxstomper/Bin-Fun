@@ -17,11 +17,23 @@ void loop()
 	// up
 	for(int i = 0; i < NUM_LEDS; i ++)
 	{
-		// make the led red
 		leds[i] = CRGB::Red;
 		FastLED.show();
 		delay(200);
 		leds[i] = CRGB::Black;
+		FastLED.show();
+
+		leds[i] = CRGB::Green;
+		FastLED.show();
+		delay(200);
+		leds[i] = CRGB::Black;
+		FastLED.show();
+
+		leds[i] = CRGB::Blue;
+		FastLED.show();
+		delay(200);
+		leds[i] = CRGB::Black;
+		FastLED.show();
 	}
 
 	// down
@@ -37,7 +49,7 @@ void loop()
 	// up
 	for(int i = 0; i < NUM_LEDS; i ++)
 	{
-		leds[i] = CRGB::Green;
+		leds[i] = CRGB(random(0, 256), random(0, 256), random(0, 256));
 		FastLED.show();
 		delay(200);
 		leds[i] = CRGB::Black;
