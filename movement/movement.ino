@@ -70,14 +70,17 @@ void input()
 void movement()
 {
     // 0,0 is bottom right hence why x is being increased to move left
-
     leds[XY(snake_x, snake_y)] = CRGB::Black; // turn off current LED
-    switch( direction)
+    switch( direction )
     {
         case( 'u' ):
             if( snake_y < (matrix_height - 1) )
             {
                 snake_y ++;
+            }
+            else
+            {
+                death();
             }
             // else die animation or whatever
             break;
@@ -87,7 +90,10 @@ void movement()
             {
                 snake_y --;
             }
-            // else die animation or whatever
+            else
+            {
+                death();
+            }
             break;
 
         case( 'l' ):
@@ -95,7 +101,10 @@ void movement()
             {
                 snake_x ++;
             }
-            // else die animation or whatever
+            else
+            {
+                death();
+            }
             break;
 
         case( 'r' ):
@@ -103,12 +112,25 @@ void movement()
             {
                 snake_x --;
             }
-            // else die animation or whatever
+            else
+            {
+                death();
+            }
             break;
     }
-
     leds[XY(snake_x, snake_y)] = CRGB::Red; // new position
     FastLED.show();
+}
+
+void death()
+{
+    // animation - i.e flash leds or something
+    // reset snake
+    leds[XY(snake_x, snake_y)] = CRGB::Black;
+    snake_x = 0;
+    snake_y = 0;
+    leds[XY(snake_x, snake_y)] = CRGB::Red;
+    delay(250);
 }
 
 void setup()
@@ -120,5 +142,6 @@ void setup()
 void loop()
 {
     input();
+    movement();
     delay(250 / speed);
 }
