@@ -146,5 +146,6 @@ void setup()
 void loop()
 {
     get_input();
+    pickup(); // should make it look like it spawns on the next frame
     delay(100);
 }
