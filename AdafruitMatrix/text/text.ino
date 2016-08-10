@@ -50,7 +50,15 @@ void text_test()
     matrix.setTextSize(1);
 
     matrix.setTextColor(matrix.Color333(7, 0, 0));
-    matrix.print('TEST');
+    matrix.print('123');
+
+    delay(1000);
+    clear_matrix();
+    
+    matrix.setTextColor(matrix.Color333(BLUE));
+    matrix.setCursor(1, 0);
+    matrix.setTextSize(1);
+    matrix.print('TESTING');
 
     delay(500);
     clear_matrix();
@@ -65,6 +73,4 @@ void setup()
 void loop()
 {
     text_test();
-    pixel_test();
-    delay(100);
 }

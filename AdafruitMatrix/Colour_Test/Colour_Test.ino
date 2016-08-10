@@ -17,12 +17,15 @@ void setup()
 void loop()
 {
     matrix.fillScreen(matrix.Color333(7, 0, 0)); // red
+    delay(500);
     matrix.fillScreen(matrix.Color333(0, 0, 0)); // black
-    delay(1000);
+    delay(500);
     matrix.fillScreen(matrix.Color333(0, 7, 0)); // green
+    delay(500);
     matrix.fillScreen(matrix.Color333(0, 0, 0)); // black
-    delay(1000);
+    delay(500);
     matrix.fillScreen(matrix.Color333(0, 0, 7)); // blue
+    delay(500);
     matrix.fillScreen(matrix.Color333(0, 0, 0)); // black
-    delay(1000);
+    delay(500);
 }
