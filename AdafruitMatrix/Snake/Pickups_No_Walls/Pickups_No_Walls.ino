@@ -1,7 +1,7 @@
 #include <Adafruit_GFX.h>
 #include <RGBmatrixPanel.h>
 
-// Matrix
+// ########## MATRIX ########## //
 #define CLK 8
 #define LAT A3
 #define OE 9
@@ -9,45 +9,47 @@
 #define B A1
 #define C A2
 RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);
-// flipping axis
-const int matrix_width = 16;
-const int matrix_height = 32;
+const int matrix_width = 16; // inverted axis due to using portrait orientation
+const int matrix_height = 32; // inverted axis due to using portrait orientation
 
-// COLOURS
+// ----- Colours ----- //
 #define BLACK 0, 0, 0
 #define RED 7, 0, 0
 #define GREEN 0, 7, 0
 #define BLUE 0, 0, 7
+// maybe make a library of colours so to access it would be COLOUR.blue, etc.
 
-// Joystick
-const int joy_x_pin = A4; // change pin
-const int joy_y_pin = A5; // change pin
-int joy_x;
-int joy_y;
+// ########## Joystick ##########//
+const int joy_x_pin = A4;
+const int joy_y_pin = A5;
+int joy_x; // 0-1023
+int joy_y; // 0-1023
 
-// position - starts off in bottom left when orintated portrait
+// ########## Player ########## //
 int x = 0;
 int y = 16;
 char direction = 'u';
+int score;
 
-// pickup
+// ########## Pickups i.e. fruit ########## //
 boolean pickup_exists;
 int pickup_x;
 int pickup_y;
 
+// ########## Functions ########## //
 void get_input()
 {
-    // values are 0 - 1023 on each axis
+    // values are 0 - 1023 on each axis, using a 100 buffer
     joy_x = analogRead(joy_x_pin);
     joy_y = analogRead(joy_y_pin);
 
-    if(joy_x <= 100) // LEFT
+    if(joy_x <= 100) // Down
         direction = 'd';
-    if(joy_x >= 973) // RIGHT
+    if(joy_x >= 923) // Up
         direction = 'u';
-    if(joy_y <= 100) // DOWN
+    if(joy_y <= 100) // Left
         direction = 'l';
-    if(joy_y >= 973) // UP
+    if(joy_y >= 923) // Right
         direction = 'r';
 
     update_display();
@@ -58,48 +60,44 @@ void update_display()
     // disable player led
     matrix.drawPixel(x, y, matrix.Color333(BLACK));
 
-    switch( direction )
+    // translate direction into movement
+    switch(direction)
     {
         case('u'):
-            if(x < matrix_height - 1)
-                x ++;
-            else
-                death();
+            x ++;
+            if(x > matrix_height) // if hit the top go to botton
+                x = 0;
             break;
 
         case('d'):
-            if(x > 0)
-                x --;
-            else
-                death();
+            x --;
+            if(x < 0) // if hit the bottom go to top
+                x = 32;
             break;
 
         case('l'):
-          if(y > 0)
-              y --;
-          else
-              death();
+            y --;
+            if(y < 0) // if hit the left go to right
+                y = 16;
           break;
 
         case('r'):
-          if(y < matrix_width - 1)
-              y ++;
-          else
-              death();
+            y ++;
+            if(y > 16) // if hit the right go to right
+                y = 0;
           break;
     }
-    // change led colour (x, y) - ENABLE
+    // turn on LED in the new position
     matrix.drawPixel(x, y, matrix.Color333(GREEN));
-    // check if on top of pickup - delay is minimal so it will look ok
 
-    // cant do if x && y == pickup_x && pickup_y can i?
-    if( (x == pickup_x) && (y == pickup_y) )
+    // check if on top of pickup - delay is minimal so it will look ok
+    if(x == pickup_x && y == pickup_y && pickup_exists == true) // needs pickup_exists otherwise will change colour on the coord
     {
-        // grow snake or whatever, ill just change color
+        // grow snake or whatever, ill just change color when it picks up the pickup
         matrix.drawPixel(x, y, matrix.Color333(random(0, 8), random(0, 8), random(0, 8)));
-        // matrix.drawPixel(x, y, matrix.Color333( rand(0, 8), rand(0, 8), rand(0, 8) ));
-        // "remove" pickup
+        // "remove" pickup - stops from spawning more
         pickup_exists == false;
+        score += 10; // add 10 to the score for picking up
     }
 }
 
@@ -118,13 +116,15 @@ void death()
     matrix.fillScreen(matrix.Color333(BLACK));
     delay(250);
 
-    // reset pos
+    // reset player
+    score = 0;
     x = 0;
     y = 0;
     matrix.drawPixel(x, y, matrix.Color333(GREEN));
-    direction = 'u'; // make u
+    direction = 'u';
+
     update_display();
-    delay(1000);
+    delay(1000); // wait 1 second to give time for the player
     pickup_exists = false;
 }
 
@@ -152,6 +152,6 @@ void setup()
 void loop()
 {
     get_input();
-    pickup(); // should make it look like it spawns on the next frame
-    delay(200);
+    pickup();
+    delay(50);
 }

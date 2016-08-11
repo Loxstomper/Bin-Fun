@@ -1,19 +1,6 @@
 #include <Adafruit_GFX.h>
 #include <RGBmatrixPanel.h>
 
-
-// MATRIX LAYOUt
-// [][][][][][][][][][][][][][] 32x16
-// [][][][][][][][][][][][][][]
-// [][][][][][][][][][][][][][]
-// [][][][][][][][][][][][][][]
-
-// we need 16x32
-// [][][][]
-// [][][][]
-// [][][][]
-// [][][][]
-
 // Matrix
 #define CLK 8
 #define LAT A3
@@ -46,17 +33,17 @@ char direction = 'u';
 void get_input()
 {
     // values are 0 - 1023 on each axis
-    joy_x = digitalRead(joy_x_pin);
-    joy_y = digitalRead(joy_y_pin);
+    joy_x = analogRead(joy_x_pin);
+    joy_y = analogRead(joy_y_pin);
 
-    if(joy_x <= 50) // LEFT
-        direction = 'l';
-    if(joy_x >= 973) // RIGHT
-        direction = 'r';
-    if(joy_y <= 50) // DOWN
+    if(joy_x <= 100) // LEFT
         direction = 'd';
-    if(joy_y >= 973) // UP
+    if(joy_x >= 973) // RIGHT
         direction = 'u';
+    if(joy_y <= 100) // DOWN
+        direction = 'l';
+    if(joy_y >= 973) // UP
+        direction = 'r';
 
     update_display();
 }
