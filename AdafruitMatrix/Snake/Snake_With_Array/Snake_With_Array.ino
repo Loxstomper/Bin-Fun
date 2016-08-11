@@ -112,14 +112,18 @@ void update_display()
         score += 10; // add 10 to the score for picking up
     }
 
-    // update entire body - maybe issue with element 1 and element 0, if there is make element 1 = element 0 before element 0 is modified and remeove element 1 from for loop
+    // update entire body - maybe issue with element 1 and element 0, if there is, make element 1 = element 0 before element 0 is modified and remeove element 1 from for loop
     // having an invisible snake the entire time and its components are just enabled
-    for(int i = 1; i < length + 1; i ++)
+    for(int i = 1; i < 20; i ++) // make a variable for max length, DOUBLE CHECK THIS ON THE LIMIT
     {
         body[i].x = body[i-1].x;
         body[i].y = body[i-1].y;
         // only lights up the enabled parts
         for(int j = 1; j < length + 1; j ++)
+        {
+            if(body[j].enabled == false) // saves enabling elements that are allready enabled
+                body[j}.enabled = true;
+
             matrix.drawPixel(body[j].x, body[j].y, matrix.Color333(GREEN));
     }
 
