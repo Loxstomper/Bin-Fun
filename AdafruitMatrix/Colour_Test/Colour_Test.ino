@@ -28,4 +28,8 @@ void loop()
     delay(500);
     matrix.fillScreen(matrix.Color333(0, 0, 0)); // black
     delay(500);
+    matrix.fillScreen(matrix.Color333(1, 7, 3)); // white
+    delay(500);
+    matrix.fillScreen(matrix.Color333(0, 0, 0)); // black
+    delay(500);
 }
