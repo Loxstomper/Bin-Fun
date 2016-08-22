@@ -27,7 +27,7 @@
 // ----- Enable Backlight ----- //
 lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
 lcd.setBacklight(HIGH);
-lcd.home (); // set cursor position to (0, 0)
+lcd.home(); // set cursor position to (0, 0)
 
 // initilise the LCD
 LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
@@ -57,7 +57,7 @@ int joy_y;
 
 // ######### Player ########## //
 char direction;
-int score;
+int score = 0;
 int highscore = 0; // stored in ram so every boot it gets lost
 int length;
 const int max_length = 20;
@@ -122,6 +122,7 @@ void pickup()
 {
     // disable the previous location
     // not sure if it this will work because in the begining these variables have no value
+    // can do an if statement to check values are greater than 0
     leds[XY(pickup_x, pickup_y)] = CRGB::Black;
 
     // random coord
@@ -188,6 +189,7 @@ void death()
     score = 0; // reset the score value
     length = 1;
 
+    // could do all of this in game start
     // resets player position, bottom right
     body[0].x = 0;
     body[0].y = 0;
