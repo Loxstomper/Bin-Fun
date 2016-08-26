@@ -1,10 +1,10 @@
 // Created by Lochie Ashcroft //
 
 // internal documentation
-// ########## NAME ########## // means major section
-// ----- NAME ----- // means sub section
+// ########## NAME ########## // is a major section
+// ----- NAME ----- // is a sub section
 
-// ########## Includes ########## //
+// ########## Libraries ########## //
 // library for controlling the LEDs
 #include "FastLED.h"
 
@@ -31,7 +31,7 @@ LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin
 #define LED_PIN 3
 #define CHIPSET WS2812B
 
-// datatype for coordinate to led index function
+// datatype for coordinate to led index function - unisgned int
 const uint8_t kMatrixWidth = 9;
 const uint8_t kMatrixHeight = 12;
 
@@ -40,8 +40,8 @@ const int matrix_width = 9;
 const int matrix_height = 12;
 
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
-CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
-CRGB* const leds( leds_plus_safety_pixel + 1); // pointer
+CRGB leds_plus_safety_pixel[NUM_LEDS + 1];
+CRGB* const leds(leds_plus_safety_pixel + 1); // pointer
 
 // ######### Input ########## //
 
@@ -81,7 +81,7 @@ SNAKE body [max_length];
 
 // ######### Game ######### //
 
-int speed = 500; // delay in ms before input can be altered
+int speed = 500; // delay in ms before input, can be altered
 int highscore = 0; // stored in ram so every boot it gets lost
 boolean playing = false; // is the game running?
 
@@ -93,7 +93,7 @@ int pickup_y;
 
 // ########## Functions ########## //
 
-uint16_t XY( uint8_t x, uint8_t y)
+uint16_t XY(uint8_t x, uint8_t y)
 {
     // translates coordinate to LED index
   uint16_t i;
@@ -161,7 +161,7 @@ void spawn_pickup()
     for(int i = 0; i < length - 1; i ++)
     {
         // not a valid position, redo random coords
-        if(pickup_x == body[i].x && pickup_y == body[i].y)
+        if(pickup_x == body[i].x && pickup_y == body[i].y && body[i].enabled == true)
             spawn_pickup();
     }
 
@@ -184,6 +184,7 @@ void death_animation()
 void update_LCD()
 {
     // prints the existing highscore or the new one if applicable
+
     if(score > highscore)
     {
         highscore = score; // update highscore
@@ -198,17 +199,18 @@ void update_LCD()
     {
         // highscore was not beaten
         lcd.home();
-        lcd.print("Highscore: ", highscore);
+        lcd.print("Highscore: " + highscore);
         lcd.setCursor(0, 1);
-        lcd.print("Score        : ", score);
+        lcd.print("Score        : " + score);
     }
 }
 
 void reset_player()
 {
     // resets all player variables
+
     score = 0;
-    length = 1; // reset length back to 1
+    length = 1;
 
     // resets body object
     for(int i = 0; i < length - 1; i ++)
@@ -218,7 +220,7 @@ void reset_player()
         body[i].last_x = 0;
         body[i].last_y = 0;
 
-        // compacting code - the head is allways enabled
+        // compacting code - the head is allways enabled, and its initial position is 0,0
         if(i != 0)
             body[i].enabled = false;
     }
@@ -228,7 +230,7 @@ void reset_player()
 
 void death()
 {
-    // description
+    // calls the death sequence
 
     // LCD says game over
     lcd.home();
@@ -370,6 +372,19 @@ void snake_start()
     //lcd.setCursor(1, 1):
 }
 
+void idle()
+{
+	// function when the game is not playing, animation, advertising etc
+
+    FastLED.clear();
+	// just making the entire display a random colour and brighting / dimming
+	fill_solid(leds, NUM_LEDS, CRGB(random(0, 256), random(0, 256), random(0, 256)));
+    //http://fastled.io/docs/3.1/group___dimming.html#gae51352a3522bb8eae5e17dbee97aa1aa
+    FastLED.show();
+    delay(1000);
+
+}
+
 void setup()
 {
     // set the led data pin to output
@@ -401,9 +416,10 @@ void loop()
 {
     while (playing == false);
     {
-        // screensaver - some flashy advertising
+        // screensaver
+        idle();
         // menu system
-        
+
         if(digitalRead(button_pin) == HIGH)
             playing = true;
     }
